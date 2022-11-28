@@ -5,17 +5,20 @@
 
 call plug#begin(stdpath('data') . '/plugged')
 
-Plug 'dag/vim-fish'
+Plug 'sickill/vim-monokai'
 Plug 'chriskempson/base16-vim'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
+
 Plug 'cespare/vim-toml'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-repeat'
 Plug 'godlygeek/tabular'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-
+Plug 'dag/vim-fish'
 Plug 'lnl7/vim-nix'
+
+Plug 'norcalli/nvim-colorizer.lua'
 
 " Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
 " Plug 'nvim-tree/nvim-tree.lua'
@@ -183,3 +186,12 @@ au! BufWritePost $MYVIMRC source %      " auto source when writing to init.vm al
 " require("nvim-tree").setup()
 
 " EOF
+
+set termguicolors
+
+" let g:molokai_original = 1
+" let g:rehash256 = 1
+" colorscheme molokai
+" colorscheme monokai
+" colorscheme base16-default-dark
+colorscheme base16-tomorrow-night

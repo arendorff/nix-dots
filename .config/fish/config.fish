@@ -93,6 +93,7 @@ set -U FZF_DEFAULT_COMMAND 'fd --hidden --type f --ignore-file ~/.config/fd/fdig
 # fancy fzf for pacman
 function fs
 pacman -Slq | fzf -m --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S
+
 end
 # fancy fzf for pacman
 function fai
@@ -168,11 +169,11 @@ abbr dbe distrobox enter distrobox
 
 # nixos
 abbr nrs "sudo nixos-rebuild switch"
-abbr nrb "sudo nixos-rebuild switch"
-#abbr nrc "sudo nvim /etc/nixos/configuration.nix"
-abbr nrc "nvim /home/mo/Documents/dots/x280/configuration.nix"
 abbr nrsu "sudo nixos-rebuild switch --upgrade"
+abbr nrb "sudo nixos-rebuild boot"
 abbr nrbu "sudo nixos-rebuild boot --upgrade"
+#abbr nrc "sudo nvim /etc/nixos/configuration.nix"
+# abbr nrc "nvim /home/mo/Documents/dots/x280/configuration.nix"
 
 
 # zoxide
