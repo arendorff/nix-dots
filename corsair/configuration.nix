@@ -26,7 +26,8 @@
     packages = with pkgs; [
       # ddcutil stuff
       ddcutil
-      gnomeExtensions.display-ddc-brightness-volume
+      # gnomeExtensions.display-ddc-brightness-volume
+      gnomeExtensions.adjust-display-brightness
       # wm stuff
       dmenu
       alacritty
@@ -34,6 +35,7 @@
       dunst
       kitty
       firefox-wayland
+      gnome.gnome-boxes
     ];
   };
 
@@ -54,6 +56,10 @@
   # networking.firewall.enable = false;
 
 #########################
+
+# printer driver enable
+services.printing.enable = true;
+services.printing.drivers = [ pkgs.brlaser ];
 
 # latest kernel
 boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -78,6 +84,9 @@ fonts.fonts = with pkgs; [
   # add kernel modules
   boot.kernelModules = [ "i2c-dev" ];
 
+  # virtualization stuff
+  virtualisation.libvirtd.enable = true;
+
   # home manager config
   home-manager.users.mo = { pkgs, ... }: {
 
@@ -94,13 +103,13 @@ fonts.fonts = with pkgs; [
 
     dconf.settings."org/gnome/desktop/interface" = {
       clock-show-weekday = true;
-      font-antialiasing = "rgba";
-      show-battery-percentage = true;
-      tap-to-click = true;
-      two-finger-scrolling-enabled = true;
+      # font-antialiasing = "rgba";
+      # show-battery-percentage = true;
+      # tap-to-click = true;
+      # two-finger-scrolling-enabled = true;
       font-hinting = "slight";
       monospace-font-name = "Source Code Pro 14";
-      text-scaling-factor = "1.25";
+      # text-scaling-factor = "1.25";
     };
 
     dconf.settings."org/gnome/desktop/input-sources" = {

@@ -194,4 +194,5 @@ set termguicolors
 " colorscheme molokai
 " colorscheme monokai
 " colorscheme base16-default-dark
-colorscheme base16-tomorrow-night
+colorscheme base16-default-dark
+" colorscheme base16-tomorrow-night

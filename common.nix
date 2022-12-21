@@ -145,6 +145,7 @@
     mullvad-vpn
     chromium
     mpv
+    libreoffice
 
     # gnome
     gnome.gnome-tweaks
@@ -177,7 +178,7 @@
       };
   };
 
-  # configure fontconfig. Defaults are fine, that's why nothing is defined.
+  # configure fontconfig. Defaults are fine, that's why nothing is defined. Not sure this is even necessary?
   fonts.fontconfig = {
     enable = true;
   };
