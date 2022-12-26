@@ -134,6 +134,7 @@
     crow-translate # both translate apps
     translate-shell # both translate apps
     smartmontools
+    speedtest-cli
 
 
     # gui apps

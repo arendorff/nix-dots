@@ -12,6 +12,10 @@
       <home-manager/nixos>
     ];
 
+  # enable ntfs support
+  boot.supportedFilesystems = [ "ntfs" ];
+
+
   networking.hostName = "corsair"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -62,7 +66,7 @@ services.printing.enable = true;
 services.printing.drivers = [ pkgs.brlaser ];
 
 # latest kernel
-boot.kernelPackages = pkgs.linuxPackages_latest;
+# boot.kernelPackages = pkgs.linuxPackages_latest;
 
 fonts.fonts = with pkgs; [
   fira-code
