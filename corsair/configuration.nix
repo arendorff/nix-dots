@@ -12,6 +12,9 @@
       <home-manager/nixos>
     ];
 
+  # fix issue with syncthing by setting inotify sysctl settings
+  boot.kernel.sysctl = { "fs.inotify.max_user_watches" = 204800; };
+
   # enable ntfs support
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -21,6 +24,11 @@
 
   # services.xserver.windowManager.awesome.enable = true;
   services.xserver.windowManager.spectrwm.enable = true;
+  services.xserver.windowManager.cwm.enable = true;
+  # services.picom = {
+    # enable = true;
+    # shadow = true;
+  # };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.mo = {
@@ -37,9 +45,13 @@
       alacritty
       lxappearance
       dunst
-      kitty
+      # kitty
       firefox-wayland
       gnome.gnome-boxes
+      qmk
+      qmk-udev-rules
+      mangohud
+      distrobox
     ];
   };
 
@@ -54,19 +66,22 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 55738 ];
+  networking.firewall.allowedUDPPorts = [ 55738 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
 #########################
+
+# enable udev rules for qmk
+services.udev.packages = [ pkgs.qmk-udev-rules ];
 
 # printer driver enable
 services.printing.enable = true;
 services.printing.drivers = [ pkgs.brlaser ];
 
 # latest kernel
-# boot.kernelPackages = pkgs.linuxPackages_latest;
+boot.kernelPackages = pkgs.linuxPackages_latest;
 
 fonts.fonts = with pkgs; [
   fira-code
@@ -90,6 +105,7 @@ fonts.fonts = with pkgs; [
 
   # virtualization stuff
   virtualisation.libvirtd.enable = true;
+  virtualisation.podman.enable = true;
 
   # home manager config
   home-manager.users.mo = { pkgs, ... }: {
@@ -99,6 +115,124 @@ fonts.fonts = with pkgs; [
 	home.packages = with pkgs; [
 	];
 
+    programs.neovim = {
+      enable = true;
+      # defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+      vimdiffAlias = true;
+      # plugins = with pkgs.vimPlugins; [
+      #   nvim-treesitter.withAllGrammars
+      #   base16-vim
+      #   # loremipsum
+      #   vim-speeddating
+      #   vim-repeat
+      #   tabular
+      #   vim-commentary
+      #   vim-surround
+      #   vim-fish
+      #   vim-nix
+      #   # use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+      #   nvim-colorizer-lua
+      #   telescope-nvim
+      #   plenary-nvim # needed for telescope I think
+      #   nvim-lspconfig
+
+    # # -- Autocompletion
+    # # {'hrsh7th/nvim-cmp'},         -- Required
+    # # {'hrsh7th/cmp-nvim-lsp'},     -- Required
+    # # {'hrsh7th/cmp-buffer'},       -- Optional
+    # # {'hrsh7th/cmp-path'},         -- Optional
+    # # {'saadparwaiz1/cmp_luasnip'}, -- Optional
+    # # {'hrsh7th/cmp-nvim-lua'},     -- Optional
+
+    # # -- Snippets
+    # # {'L3MON4D3/LuaSnip'},             -- Required
+    # # {'rafamadriz/friendly-snippets'}, -- Optional
+  # # }
+      # ];
+      # extraConfig = ''
+
+      #   lua << EOF
+      #   local lspconfig = require('lspconfig')
+      #   -- lspconfig.pyright.setup {}
+      #   lspconfig.eslint.setup {}
+      #   lspconfig.lua_ls.setup {}
+      #   EOF
+
+      #   luafile ~/Documents/dots/common/.config/nvim/after/plugin/treesitter.lua
+      #   luafile ~/Documents/dots/common/.config/nvim/lua/settings.lua
+      #   luafile ~/Documents/dots/common/.config/nvim/lua/keybinds.lua
+      #   luafile ~/Documents/dots/common/.config/nvim/lua/leader.lua
+      #   source ~/Documents/dots/common/.config/nvim/lua/autocmds.vim
+      #   source ~/Documents/dots/common/.config/nvim/lua/abbr.lua
+      # '';
+
+# #       extraPackages = with pkgs.unstable; [
+      # extraPackages = with pkgs; [
+      #   # Essentials
+      #   nodePackages.npm
+      #   nodePackages.neovim
+
+      #   # # Python
+      #   # (python3.withPackages (ps: with ps; [
+      #   #   setuptools # Required by pylama for some reason
+      #   #   pylama
+      #   #   black
+      #   #   isort
+      #   #   yamllint
+      #   #   debugpy
+      #   # ]))
+      #   # nodePackages.pyright
+
+      #   # Lua
+      #   pkgs.sumneko-lua-language-server
+      #   selene
+
+      #   # Nix
+      #   statix
+      #   nixpkgs-fmt
+      #   nil
+
+      #   # C, C++
+      #   clang-tools
+      #   # pkgs.cppcheck
+
+      #   # Shell scripting
+      #   shfmt
+      #   shellcheck
+      #   shellharden
+
+      #   # JavaScript (tsserver is not working)
+      #   nodePackages.prettier
+      #   nodePackages.eslint
+      #   # nodePackages.typescript
+      #   # nodePackages.typescript-language-server
+
+      #   # # Go
+      #   # go
+      #   # gopls
+      #   # golangci-lint
+      #   # delve
+
+      #   # Additional
+      #   nodePackages.bash-language-server
+      #   nodePackages.yaml-language-server
+      #   # nodePackages.dockerfile-language-server-nodejs
+      #   # nodePackages.vscode-json-languageserver
+      #   # nodePackages.markdownlint-cli
+      #   # taplo-cli
+      #   # texlab
+      #   # codespell
+      #   # gitlint
+      #   # terraform-ls
+
+      #   # Telescope dependencies
+      #   ripgrep
+      #   fd
+      # ];
+    }; 
+  
      programs.git = {
        enable = true;
        userEmail = "mhenschel@mailbox.org";
@@ -129,31 +263,6 @@ fonts.fonts = with pkgs; [
       dynamic-workspaces = false;
     };
 
-## Laptop specific
-# dconf write /org/gnome/desktop/input-sources/xkb-options "['altwin:swap_alt_win']"
-
-# dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'de+neo_qwertz')]"
-# # dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'de')]"
-
-# # gnome search
-# dconf write /org/gnome/desktop/search-providers/disabled "['org.gnome.Contacts.desktop', 'org.gnome.Boxes.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'org.gnome.Epiphany.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Software.desktop', 'org.gnome.Photos.desktop', 'firefox.desktop', 'org.gnome.clocks.desktop']"
-
-# # gnome keybindings/shortcuts
-# dconf write /org/gnome/desktop/wm/keybindings/close "['<Super>q']"
-# dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-left "['<Shift><Super>h']"
-# dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-right "['<Shift><Super>l']"
-# dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-left "['<Super>h']"
-# dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-right "['<Super>l']"
-# dconf write /org/gnome/desktop/wm/keybindings/toggle-fullscreen "['<Shift><Super>f']"
-# dconf write /org/gnome/desktop/wm/keybindings/toggle-maximized "['<Super>f']"
-
-# dconf write /org/gnome/desktop/interface/gtk-theme "'adw-gtk3'"
-
-# # nightlight
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-enabled true
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-last-coordinates "'(53.06901803988481, 8.8621750000000006)'"
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-schedule-automatic false
-
-   };
+};
 
 }

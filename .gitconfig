@@ -1,0 +1,24 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = arendorff
+  email = mhenschel@mailbox.org
+
+[core]
+  editor = nvim
+  autocrlf = input 
+
+[difftool]
+  prompt = true
+
+[diff]
+  tool = nvimdiff
+
+[difftool "nvimdiff"]
+  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+
+[merge]
+	tool = vimdiff
+
+[mergetool "vimdiff"]
+	path = nvim

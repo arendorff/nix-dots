@@ -5,9 +5,10 @@
 
 call plug#begin(stdpath('data') . '/plugged')
 
-Plug 'sickill/vim-monokai'
+" Plug 'sickill/vim-monokai'
 Plug 'chriskempson/base16-vim'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
+" Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'vim-scripts/loremipsum'
 
 Plug 'cespare/vim-toml'
 Plug 'tpope/vim-speeddating'
@@ -17,8 +18,16 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'dag/vim-fish'
 Plug 'lnl7/vim-nix'
-
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'norcalli/nvim-colorizer.lua'
+
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim' " needed for telescope I think
+
+" follow latest release and install jsregexp.
+Plug 'L3MON4D3/LuaSnip', {'tag': '1.2.1', 'do': 'make install_jsregexp'}
+Plug 'rafamadriz/friendly-snippets'
 
 " Plug 'nvim-tree/nvim-web-devicons' " optional, for file icons
 " Plug 'nvim-tree/nvim-tree.lua'
@@ -29,11 +38,10 @@ Plug 'norcalli/nvim-colorizer.lua'
 call plug#end()
 " }}}
 
-
 " basic settings {{{
 
 " disable status bar
-set laststatus=0
+" set laststatus=0
 " Allow gf to open non-existent files
 map gf :edit <cfile><cr>
 
@@ -61,6 +69,7 @@ set scrolloff=999
 " disable mouse support
 set mouse=
 
+let mapleader = " " " map leader to Space
 
 set formatoptions-=cro                  " Stop newline continution of comments
 autocmd FileType * set formatoptions-=cro " had to use an autocommand because ftplugin would keep overwriting these settings. STILL DOESNT WORK with some files. Very annoying.
@@ -75,7 +84,7 @@ set clipboard+=unnamedplus               " all yanks are also in clipboard regis
 set linebreak " to make vim not split words when breaking a line
 set tabstop=4
 set shiftwidth=0 "number of spaces used for each step auf autoindent, >>, etc.
-set softtabstop=2
+set softtabstop=4
 set expandtab " use spaces instead of tabs.
 set smarttab " let's tab key insert 'tab stops', and bksp deletes tabs.
 set shiftround " tab / shifting moves to closest tabstop.
@@ -109,6 +118,17 @@ set gdefault " use the `g` flag by default.
 "
 " "buffers don't disappear when not active
 " " set hidden
+
+" }}}
+
+" markdown {{{
+
+" enable markdown syntax hightlighting in codeblocks (not enabled by default)
+let g:markdown_fenced_languages = ['html', 'python', 'css', 'javascript', 'lua', 'vim']
+" enable markdown folding for headers
+let g:markdown_folding = 1
+" start markdown documents with all folds open. This works but slows down opening of journal file. Probably a way to fix that but I'm lazy.
+" au FileType markdown setlocal foldlevel=99
 
 " }}}
 
@@ -168,6 +188,8 @@ noremap <A-right> :vert resize -1<CR>
 
 " au BufEnter journal.md setlocal filetype=markdown
 autocmd BufNewFile,BufRead journal.txt set ft=markdown
+" disable markdown folding for journal. Slows things down.
+autocmd BufNewFile,BufRead journal.txt set foldmethod=manual
 
 "vimrc folding
 au BufEnter init.vim setlocal foldmethod=marker
@@ -177,15 +199,56 @@ au! BufWritePost $MYVIMRC source %      " auto source when writing to init.vm al
 
 " " }}}
 
+" leader {{{
 
-" lua << EOF
-" -- disable netrw at the very start of your init.lua (strongly advised)
-" vim.g.loaded_netrw = 1
-" vim.g.loaded_netrwPlugin = 1
-" -- empty setup using defaults
-" require("nvim-tree").setup()
+" tab for next buffer
+nnoremap <Tab> <cmd>bnext<cr>
 
-" EOF
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" buffer
+nnoremap <leader>bn <cmd>bnext<cr>
+nnoremap <leader>bp <cmd>bprev<cr>
+
+" splits
+nnoremap <leader>wv <cmd>vsp<cr>
+nnoremap <leader>wh <cmd>sp<cr>
+nnoremap <leader>wq <cmd>wqa<cr>
+nnoremap <leader>wc <cmd>q<cr>
+
+" terminal
+nnoremap <leader>T <cmd>terminal<cr>
+
+" tabs
+nnoremap <leader>tt <cmd>tabnew<cr>
+nnoremap <leader>tq <cmd>tabclose<cr>
+nnoremap <leader>tn <cmd>tabnext<cr>
+nnoremap <leader>tp <cmd>tabprev<cr>
+
+" dot files
+nnoremap <leader>.v :edit ~/.config/nvim/init.vim<cr>
+nnoremap <leader>.f :edit ~/.config/fish/config.fish<cr>
+nnoremap <leader>.k :edit ~/.config/kitty/kitty.conf<cr>
+
+" colorizer
+nnoremap <leader>c :ColorizerToggle<cr>
+
+" source vimrc
+nnoremap <leader>% :source ~/.config/nvim/init.vim<cr>
+
+
+
+
+
+
+
+" }}}
+
+" color {{{
 
 set termguicolors
 
@@ -196,3 +259,36 @@ set termguicolors
 " colorscheme base16-default-dark
 colorscheme base16-default-dark
 " colorscheme base16-tomorrow-night
+
+" }}}
+
+" luasnip {{{
+
+" press <Tab> to expand or jump in a snippet. These can also be mapped separately
+" via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+" -1 for jumping backwards.
+inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+
+snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+
+" For changing choices in choiceNodes (not strictly necessary for a basic setup).
+imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+
+lua << EOF
+
+require("luasnip.loaders.from_vscode").lazy_load()
+
+EOF
+
+" }}}
+
+" abbreviations {{{
+
+" abbreviation in insert mode only
+iab cjs ```javascript<CR>```
+
+
+" }}}

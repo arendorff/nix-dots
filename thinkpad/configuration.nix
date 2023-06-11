@@ -31,6 +31,7 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
     #  packages here
+    # typescript
     ];
   };
 
@@ -39,13 +40,12 @@
   # set kernel parameters
   boot.kernelParams = [ "i915.enable_psr=0" ];
 
+  # home manager
   home-manager.users.mo = { pkgs, ... }: {
 
   home.stateVersion = "22.05";
 
     home.packages = with pkgs; [
-
-
     ];
 
     programs.git = {
@@ -53,27 +53,6 @@
       userEmail = "mhenschel@mailbox.org";
       userName = "arendorff";
     };
-
-    # xdg.configFile.fish = {
-    #   source = ./.config/fish;
-    #   recursive = true;
-    # };
-
-    # xdg.configFile.nvim = {
-    #   source = ./.config/nvim;
-    #   recursive = true;
-    # };
-
-    # xdg.configFile.fd = {
-    #   source = ./.config/fd;
-    #   recursive = true;
-    # };
-
-
-    # xdg.configFile."i3blocks/config".source = ./i3blocks.conf;
-    # home.file.".gdbinit".text = ''
-    #   set auto-load safe-path /nix/store
-    # '';
 
     dconf.settings."org/gnome/desktop/interface" = {
       clock-show-weekday = true;
@@ -83,7 +62,6 @@
       two-finger-scrolling-enabled = true;
       font-hinting = "slight";
       monospace-font-name = "Source Code Pro 14";
-      text-scaling-factor = "1.25";
     };
 
     dconf.settings."org/gnome/desktop/input-sources" = {
@@ -99,31 +77,108 @@
       dynamic-workspaces = false;
     };
 
-# dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'de+neo_qwertz')]"
-# # dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'de')]"
+    programs.neovim = {
+      enable = true;
+      # defaultEditor = true;
+      viAlias = true;
+      vimAlias = true;
+      vimdiffAlias = true;
+      # plugins = with pkgs.vimPlugins; [
+      #   nvim-treesitter.withAllGrammars
+      #   base16-vim
+      #   # loremipsum
+      #   vim-speeddating
+      #   vim-repeat
+      #   tabular
+      #   vim-commentary
+      #   vim-surround
+      #   vim-fish
+      #   vim-nix
+      #   nvim-colorizer-lua
+      #   telescope-nvim
+      #   plenary-nvim # needed for telescope I think
 
-# # gnome search
-# dconf write /org/gnome/desktop/search-providers/disabled "['org.gnome.Contacts.desktop', 'org.gnome.Boxes.desktop', 'org.gnome.Calculator.desktop', 'org.gnome.Calendar.desktop', 'org.gnome.Characters.desktop', 'org.gnome.Epiphany.desktop', 'org.gnome.Terminal.desktop', 'org.gnome.Software.desktop', 'org.gnome.Photos.desktop', 'firefox.desktop', 'org.gnome.clocks.desktop']"
+      #   # lsp 
+      #   nvim-lspconfig
 
-# # gnome keybindings/shortcuts
-# dconf write /org/gnome/desktop/wm/keybindings/close "['<Super>q']"
-# dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-left "['<Shift><Super>h']"
-# dconf write /org/gnome/desktop/wm/keybindings/move-to-workspace-right "['<Shift><Super>l']"
-# dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-left "['<Super>h']"
-# dconf write /org/gnome/desktop/wm/keybindings/switch-to-workspace-right "['<Super>l']"
-# dconf write /org/gnome/desktop/wm/keybindings/toggle-fullscreen "['<Shift><Super>f']"
-# dconf write /org/gnome/desktop/wm/keybindings/toggle-maximized "['<Super>f']"
+      #   # autocompletion 
+      #   nvim-cmp
+      #   cmp-nvim-lsp
+      #   cmp-buffer
+      #   cmp-cmdline
+      #   cmp-path
+      #   cmp_luasnip
+      #   cmp-nvim-lua
 
-# dconf write /org/gnome/desktop/interface/gtk-theme "'adw-gtk3'"
+      #   # snippets 
+      #   luasnip
+      #   friendly-snippets 
 
-# # nightlight
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-enabled true
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-last-coordinates "'(53.06901803988481, 8.8621750000000006)'"
-# dconf write /org/gnome/settings-daemon/plugins/color/night-light-schedule-automatic false
+      # ];
 
-## Laptop specific
-# dconf write org/gnome/desktop/interface/text-scaling-factor "'1.25'"
-# dconf write /org/gnome/desktop/input-sources/xkb-options "['altwin:swap_alt_win']"
+      # extraPackages = with pkgs; [
+      #   # Essentials
+      #   nodePackages.npm
+      #   nodePackages.neovim
+
+      #   # # Python
+      #   # (python3.withPackages (ps: with ps; [
+      #   #   setuptools # Required by pylama for some reason
+      #   #   pylama
+      #   #   black
+      #   #   isort
+      #   #   yamllint
+      #   #   debugpy
+      #   # ]))
+      #   # nodePackages.pyright
+
+      #   # Lua
+      #   pkgs.sumneko-lua-language-server
+      #   selene
+
+      #   # Nix
+      #   statix
+      #   nixpkgs-fmt
+      #   nil
+
+      #   # C, C++
+      #   clang-tools
+      #   # pkgs.cppcheck
+
+      #   # Shell scripting
+      #   shfmt
+      #   shellcheck
+      #   shellharden
+
+      #   # JavaScript (tsserver is not working)
+      #   nodePackages.prettier
+      #   nodePackages.eslint
+      #   # nodePackages.typescript
+      #   nodePackages.typescript-language-server
+
+      #   # # Go
+      #   # go
+      #   # gopls
+      #   # golangci-lint
+      #   # delve
+
+      #   # Additional
+      #   nodePackages.bash-language-server
+      #   nodePackages.yaml-language-server
+      #   # nodePackages.dockerfile-language-server-nodejs
+      #   # nodePackages.vscode-json-languageserver
+      #   # nodePackages.markdownlint-cli
+      #   # taplo-cli
+      #   # texlab
+      #   # codespell
+      #   # gitlint
+      #   # terraform-ls
+
+      #   # Telescope dependencies
+      #   ripgrep
+      #   fd
+      # ];
+    };
 
 
   };

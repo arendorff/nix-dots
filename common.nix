@@ -123,18 +123,36 @@
     nmap
     wl-clipboard # clipboard for wayland compatible with nvim
     xclip
-    distrobox
     ncdu
     edir # batch renamer with vim
     zoxide # autojump type
     atool # archiving tool
     killall
-    neovim
-    python
+    # neovim
     crow-translate # both translate apps
     translate-shell # both translate apps
     smartmontools
     speedtest-cli
+    ripgrep
+    hdparm
+    dig # nslookup type thing
+    usbutils # lsusb
+    lshw # hardware list
+    lm_sensors # temps
+    gcc # compiler
+    unzip
+    distrobox 
+
+    # programming
+    nodejs
+    R
+    vscode
+    lua 
+
+    # LSPs
+    nodePackages.prettier
+    nodePackages.eslint
+
 
 
     # gui apps
@@ -147,6 +165,9 @@
     chromium
     mpv
     libreoffice
+    okular
+    calibre
+    kitty
 
     # gnome
     gnome.gnome-tweaks
@@ -156,6 +177,11 @@
     gnomeExtensions.appindicator
 
   ];
+
+  # enable podman for distrobox
+  virtualisation.podman.enable = true;
+  # and docker
+  # virtualisation.docker.enable = true;
 
   # mullvad vpn
   services.mullvad-vpn.enable = true;
@@ -190,5 +216,11 @@
     dates = "weekly";
     options = "--delete-older-than 30d";
   };
+
+# programs.neovim = {
+#   vimAlias = true;
+#   viAlias = true;
+#   defaultEditor = true;
+# };
 
 }

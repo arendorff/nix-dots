@@ -1,0 +1,188 @@
+-- basic settings
+
+-- Allow gf to open non-existent files
+-- map gf :edit <cfile><cr>
+
+-- Reselect visual selection after indenting
+-- vnoremap < <gv
+-- vnoremap > >gv
+
+-- Maintain the cursor position when yanking a visual selection
+-- http://ddrscott.github.io/blog/2016/yank-without-jank/
+-- vnoremap y myy`y
+-- vnoremap Y myY`y
+
+-- Paste replace visual selection without copying it
+-- vnoremap <leader>pP "_dP
+
+-- Splits open at the bottom and right, which is non-retarded, unlike vim defaults.
+vim.o.splitbelow
+vim.o.splitright
+
+-- scroll in the middle
+vim.o.scrolloff = 999
+
+vim.g.mapleader = ' '  -- map leader to Space
+
+-- set formatoptions-=cro                  -- Stop newline continution of comments
+-- autocmd FileType * set formatoptions-=cro -- had to use an autocommand because ftplugin would keep overwriting these settings. STILL DOESNT WORK with some files. Very annoying.
+
+-- set clipboard+=unnamedplus               -- all yanks are also in clipboard register
+
+vim.o.linebreak = true -- to make vim not split words when breaking a line
+vim.o.tabstop = 4
+vim.o.shiftwidth = 0 -- number of spaces used for each step auf autoindent, >>, etc.
+vim.o.softtabstop = 4
+vim.o.expandtab = true -- use spaces instead of tabs.
+vim.o.smarttab = true -- let's tab key insert 'tab stops', and bksp deletes tabs.
+vim.o.shiftround = true -- tab / shifting moves to closest tabstop.
+vim.o.autoindent = false -- Match indents on new lines.
+vim.o.smartindent = true -- Intellegently dedent / indent new lines based on rules
+vim.o.breakindent = true -- wrapping text respects indentation
+vim.g.spelllang = en_us,de_de -- spelling
+
+-- Make search more sane
+vim.o.ignorecase = true -- case insensitive search
+vim.o.smartcase = true -- If there are uppercase letters, become case-sensitive.
+vim.o.incsearch = true -- live incremental searching
+vim.o.showmatch = true -- live match highlighting
+vim.o.hlsearch = false -- highlight matches of search
+vim.o.gdefault = true -- use the `g` flag by default.
+
+-- enable markdown syntax hightlighting in codeblocks (not enabled by default)
+vim.g.markdown_fenced_languages = ['html', 'python', 'css', 'javascript', 'lua', 'vim']
+-- enable markdown folding for headers
+vim.g.markdown_folding = 1
+
+-- keybindings
+
+-- bindings for easy split nav
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+-- toggle folds
+nnoremap ä za
+nnoremap Ä zA
+
+-- move about
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+
+inoremap fj <Esc>
+inoremap jf <Esc>
+inoremap JF <Esc>
+inoremap FJ <Esc>
+
+tnoremap fj <C-\><C-N>
+tnoremap jf <C-\><C-N>
+tnoremap JF <C-\><C-N>
+tnoremap FJ <C-\><C-N>
+
+-- S and T (shift+left/right) to move to end or beginning of line.
+nnoremap H ^
+vnoremap H ^
+nnoremap L $
+vnoremap L $
+
+-- change Y to y$
+nnoremap Y y$
+
+-- press esc to exit terminal mode
+tnoremap <Esc> <C-\><C-n>
+
+-- resize using alt keys
+noremap <A-up> :resize +1<CR>
+noremap <A-down> :resize -1<CR>
+noremap <A-left> :vert resize +1<CR>
+noremap <A-right> :vert resize -1<CR>
+
+-- autocommands
+
+-- Automatically deletes all trailing whitespace and newlines at end of file on save.
+-- autocmd BufWritePre * %s/\s\+$//e
+-- autocmd BufWritepre * %s/\n\+\%$//e
+
+-- au BufEnter journal.md setlocal filetype=markdown
+autocmd BufNewFile,BufRead journal.txt set ft=markdown
+-- disable markdown folding for journal. Slows things down.
+autocmd BufNewFile,BufRead journal.txt set foldmethod=manual
+
+--vimrc folding
+au BufEnter init.vim setlocal foldmethod=marker
+-- auto source vimrc
+au! BufWritePost $MYVIMRC source %      -- auto source when writing to init.vm alternatively you can run :source $MYVIMRC
+
+-- leader
+
+-- tab for next buffer
+nnoremap <Tab> <cmd>bnext<cr>
+
+-- Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+-- buffer
+nnoremap <leader>bn <cmd>bnext<cr>
+nnoremap <leader>bp <cmd>bprev<cr>
+
+-- splits
+nnoremap <leader>wv <cmd>vsp<cr>
+nnoremap <leader>wh <cmd>sp<cr>
+nnoremap <leader>wq <cmd>wqa<cr>
+nnoremap <leader>wc <cmd>q<cr>
+
+-- terminal
+nnoremap <leader>T <cmd>terminal<cr>
+
+-- tabs
+nnoremap <leader>tt <cmd>tabnew<cr>
+nnoremap <leader>tq <cmd>tabclose<cr>
+nnoremap <leader>tn <cmd>tabnext<cr>
+nnoremap <leader>tp <cmd>tabprev<cr>
+
+-- dot files
+nnoremap <leader>.v :edit ~/.config/nvim/init.vim<cr>
+nnoremap <leader>.f :edit ~/.config/fish/config.fish<cr>
+nnoremap <leader>.k :edit ~/.config/kitty/kitty.conf<cr>
+
+-- colorizer
+nnoremap <leader>c :ColorizerToggle<cr>
+
+-- source vimrc
+nnoremap <leader>% :source ~/.config/nvim/init.vim<cr>
+
+-- color
+vim.o.termguicolors = true
+vim.o.colorscheme = base16-default-dark
+
+-- luasnip
+
+" press <Tab> to expand or jump in a snippet. These can also be mapped separately
+" via <Plug>luasnip-expand-snippet and <Plug>luasnip-jump-next.
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+" -1 for jumping backwards.
+inoremap <silent> <S-Tab> <cmd>lua require'luasnip'.jump(-1)<Cr>
+
+snoremap <silent> <Tab> <cmd>lua require('luasnip').jump(1)<Cr>
+snoremap <silent> <S-Tab> <cmd>lua require('luasnip').jump(-1)<Cr>
+
+" For changing choices in choiceNodes (not strictly necessary for a basic setup).
+imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+
+lua << EOF
+
+require("luasnip.loaders.from_vscode").lazy_load()
+
+EOF
+
+-- abbreviations
+
+-- abbreviation in insert mode only
+iab cjs ```javascript<CR>```
