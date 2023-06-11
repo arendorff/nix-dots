@@ -1,5 +1,5 @@
-	Scripts/
-	corsair/hardware-configuration.nix
-	hardware-configuration.nix
-	thinkpad/hardware-configuration.nix
+Scripts/
+corsair/hardware-configuration.nix
+hardware-configuration.nix
+thinkpad/hardware-configuration.nix
 
