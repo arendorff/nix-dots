@@ -42,6 +42,8 @@ return require('packer').startup(function(use)
 
     use 'ggandor/leap.nvim'
 
+    -- use 'rlane/pounce.nvim' -- leap alternative with fuzzy search. Other alternative is: hop 
+
     use 'farmergreg/vim-lastplace'
     use 'windwp/nvim-autopairs'
     use 'yggdroot/indentline'
